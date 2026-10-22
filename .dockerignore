@@ -1,0 +1,55 @@
+# Build
+target/
+build/
+out/
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# VS Code
+.vscode/
+
+# IntelliJ
+.idea/
+*.iml
+
+# Logs
+logs/
+*.log
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Arquivos temporários
+*.tmp
+*.swp
+
+# Dependências locais
+node_modules/
+
+# Arquivos de ambiente
+.env
+.env.*
+
+# Arquivos compilados Java
+*.class
+
+# Relatórios
+surefire-reports/
