@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.leandro.contatos.brokers.rabbit.producers.ContactProducer;
+import com.leandro.contatos.brokers.rabbit.producers.RabbitProducer;
 import com.leandro.contatos.entities.Contact;
 import com.leandro.contatos.repositories.ContactRepository;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class ContactsController {
 
 	private ContactRepository repository;
-	private ContactProducer producer;
+	private RabbitProducer producer;
 
-	public ContactsController(ContactRepository repository, ContactProducer producer) {
+	public ContactsController(ContactRepository repository, RabbitProducer producer) {
 		this.repository = repository;
 		this.producer = producer;
 	}
@@ -42,9 +42,8 @@ public class ContactsController {
 
 	@PostMapping
 	public Contact create(@RequestBody Contact entity) {
-		// return repository.save(entity);
 		var saved = repository.save(entity);
-		producer.sendMessage(saved.toString());
+		producer.sendMessage(saved);
 		return saved;
 	}
 

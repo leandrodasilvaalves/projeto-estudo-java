@@ -4,7 +4,7 @@ services:
     container_name: contatos.mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: CoreAccount  
+      MYSQL_DATABASE: contatos  
     ports:
       - "3306:3306"
     healthcheck:

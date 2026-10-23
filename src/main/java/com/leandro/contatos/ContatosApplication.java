@@ -20,18 +20,20 @@ public class ContatosApplication {
 	@Bean
 	CommandLineRunner init(ContactRepository repository) {
 		return args -> {
-			repository.deleteAll();
-			LongStream.range(1, 21)
-					.mapToObj(i -> {
-						var c = new Contact();
-						c.setName("Contact " + i);
-						c.setEmail("contact" + i + "@email.com");
-						c.setPhone("(84) 9999-999" + i);
-						return c;
-					})
-					.map(v -> repository.save(v))
-					.forEach(System.out::println);
-			;
+			if (repository.findAll().size() <= 0) {
+				// repository.deleteAll();
+				LongStream.range(1, 11)
+						.mapToObj(i -> {
+							var c = new Contact();
+							c.setName("Contact " + i);
+							c.setEmail("contact" + i + "@email.com");
+							c.setPhone("(84) 9999-999" + i);
+							return c;
+						})
+						.map(v -> repository.save(v))
+						.forEach(System.out::println);
+				;
+			}
 		};
 	}
 }
