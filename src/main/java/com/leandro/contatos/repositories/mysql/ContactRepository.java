@@ -1,4 +1,4 @@
-package com.leandro.contatos.repositories;
+package com.leandro.contatos.repositories.mysql;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

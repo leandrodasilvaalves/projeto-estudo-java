@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leandro.contatos.DTOs.ContactDto;
 import com.leandro.contatos.brokers.kafka.producers.KafkaProducer;
 import com.leandro.contatos.brokers.rabbit.producers.RabbitProducer;
 import com.leandro.contatos.entities.Contact;
-import com.leandro.contatos.repositories.ContactRepository;
+import com.leandro.contatos.repositories.mongodb.ContactMongoRepository;
+import com.leandro.contatos.repositories.mysql.ContactRepository;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,19 +27,27 @@ public class ContactsController {
 	private ContactRepository repository;
 	private RabbitProducer rabbit;
 	private KafkaProducer kafka;
+	private ContactMongoRepository mongoRepository;
 
 	public ContactsController(
 			ContactRepository repository,
 			RabbitProducer rabbit,
-			KafkaProducer kafka) {
+			KafkaProducer kafka,
+			ContactMongoRepository mongoRepository) {
 		this.repository = repository;
 		this.rabbit = rabbit;
 		this.kafka = kafka;
+		this.mongoRepository = mongoRepository;
 	}
 
 	@GetMapping
 	public List<Contact> findAll() {
 		return repository.findAll();
+	}
+
+	@GetMapping("/mongo")
+	public List<ContactDto> findAllMongo() {
+		return mongoRepository.findAll();
 	}
 
 	@GetMapping("/{id}")
@@ -46,9 +57,18 @@ public class ContactsController {
 				.orElse(ResponseEntity.notFound().build());
 	}
 
+	@GetMapping("/{id}/mongo")
+	public ResponseEntity<ContactDto> findByIdMongo(@PathVariable String id) {
+		return mongoRepository.findById(id)
+				.map(ResponseEntity::ok)
+				.orElse(ResponseEntity.notFound().build());
+	}
+
 	@PostMapping
 	public Contact create(@RequestBody Contact entity) {
 		var saved = repository.save(entity);
+		mongoRepository.insert(new ContactDto(saved));
+
 		rabbit.sendMessage(saved);
 		kafka.sendMessage(saved);
 		return saved;

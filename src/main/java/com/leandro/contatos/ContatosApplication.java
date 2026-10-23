@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.leandro.contatos.entities.Contact;
-import com.leandro.contatos.repositories.ContactRepository;
+import com.leandro.contatos.repositories.mysql.ContactRepository;
 
 @SpringBootApplication
 public class ContatosApplication {
