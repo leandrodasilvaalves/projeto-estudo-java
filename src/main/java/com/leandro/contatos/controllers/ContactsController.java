@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leandro.contatos.brokers.rabbit.producers.ContactProducer;
 import com.leandro.contatos.entities.Contact;
 import com.leandro.contatos.repositories.ContactRepository;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,9 +21,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class ContactsController {
 
 	private ContactRepository repository;
+	private ContactProducer producer;
 
-	public ContactsController(ContactRepository repository) {
+	public ContactsController(ContactRepository repository, ContactProducer producer) {
 		this.repository = repository;
+		this.producer = producer;
 	}
 
 	@GetMapping
@@ -39,7 +42,10 @@ public class ContactsController {
 
 	@PostMapping
 	public Contact create(@RequestBody Contact entity) {
-		return repository.save(entity);
+		// return repository.save(entity);
+		var saved = repository.save(entity);
+		producer.sendMessage(saved.toString());
+		return saved;
 	}
 
 	@PutMapping("/{id}")

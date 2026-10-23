@@ -27,4 +27,11 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-         
+  
+  rabbit:
+    image: rabbitmq:3-management
+    container_name: contatos.rabbit
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    

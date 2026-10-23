@@ -21,4 +21,14 @@ public class Contact {
     private String name;
     private String email;
     private String phone;
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\": \"" + id + "\", " +
+                "\"name\": \"" + name + "\", " +
+                "\"email\": \"" + email + "\", " +
+                "\"phone\": \"" + phone + "\" " +
+                "}";
+    }
 }
