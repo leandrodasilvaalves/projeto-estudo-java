@@ -6,7 +6,7 @@ import com.leandro.contatos.entities.Contact;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 
-@Component
+@Component("rabbitContactConsumer")
 public class ContactConsumer {
 
 	@RabbitListener(queues = "queue-name")

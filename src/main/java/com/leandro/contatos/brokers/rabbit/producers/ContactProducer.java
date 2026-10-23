@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.leandro.contatos.entities.Contact;
 
-@Component
+@Component("rabbitContactProducer")
 public class ContactProducer implements RabbitProducer {
 
     private RabbitTemplate rabbitTemplate;
