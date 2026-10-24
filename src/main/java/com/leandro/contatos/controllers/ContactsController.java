@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,7 +46,7 @@ public class ContactsController {
 	}
 
 	@GetMapping
-	@Cacheable(cacheNames = "contacts", key = "'find:all'")
+	@Cacheable(cacheNames = "contacts", key = "'find-all'")
 	public List<Contact> findAll() {
 		return repository.findAll();
 	}
@@ -56,7 +57,7 @@ public class ContactsController {
 	}
 
 	@GetMapping("/{id}")
-	@Cacheable(cacheNames = "contacts", key = "'find:id:' + #id", unless = "#result == null")
+	@Cacheable(cacheNames = "contact", key = "#id", unless = "#result == null")
 	public Contact findById(@PathVariable long id) {
 		return repository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -70,7 +71,10 @@ public class ContactsController {
 	}
 
 	@PostMapping
-	@CacheEvict(cacheNames = "contacts", allEntries = true)
+	@Caching(evict = {
+			@CacheEvict(cacheNames = "contacts", allEntries = true),
+			@CacheEvict(cacheNames = "contact", allEntries = true)
+	})
 	public Contact create(@RequestBody Contact entity) {
 		var saved = repository.save(entity);
 		mongoRepository.insert(ContactDto.create(saved));
