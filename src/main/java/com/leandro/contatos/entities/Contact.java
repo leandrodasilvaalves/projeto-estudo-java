@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tools.jackson.databind.ObjectMapper;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,11 +25,7 @@ public class Contact {
 
     @Override
     public String toString() {
-        return "{" +
-                "\"id\": \"" + id + "\", " +
-                "\"name\": \"" + name + "\", " +
-                "\"email\": \"" + email + "\", " +
-                "\"phone\": \"" + phone + "\" " +
-                "}";
+        var mapper = new ObjectMapper();
+        return mapper.writeValueAsString(this);
     }
 }

@@ -10,6 +10,6 @@ public class ContactConsumer {
 
     @KafkaListener(topics = "${topics.contacts}", groupId = "contacts-1")
     public void consumeMessage(Contact message) {
-        System.out.println("Received message: " + message);
+        System.out.println("[Kafka] Received message: " + message);
     }
 }

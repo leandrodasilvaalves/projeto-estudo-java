@@ -11,6 +11,6 @@ public class ContactConsumer {
 
 	@RabbitListener(queues = "queue-name")
 	public void receiveMessage(Contact message) {
-		System.out.println("Received message: " + message);
+		System.out.println("[Rabbit] Received message: " + message);
 	}
 }

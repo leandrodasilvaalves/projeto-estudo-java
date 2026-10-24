@@ -57,7 +57,7 @@ public class ContactsController {
 				.orElse(ResponseEntity.notFound().build());
 	}
 
-	@GetMapping("/{id}/mongo")
+	@GetMapping("/mongo/{id}")
 	public ResponseEntity<ContactDto> findByIdMongo(@PathVariable String id) {
 		return mongoRepository.findById(id)
 				.map(ResponseEntity::ok)
@@ -67,7 +67,7 @@ public class ContactsController {
 	@PostMapping
 	public Contact create(@RequestBody Contact entity) {
 		var saved = repository.save(entity);
-		mongoRepository.insert(new ContactDto(saved));
+		mongoRepository.insert(ContactDto.create(saved));
 
 		rabbit.sendMessage(saved);
 		kafka.sendMessage(saved);
