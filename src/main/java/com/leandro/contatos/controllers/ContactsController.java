@@ -2,12 +2,16 @@ package com.leandro.contatos.controllers;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.leandro.contatos.DTOs.ContactDto;
 import com.leandro.contatos.brokers.kafka.producers.KafkaProducer;
@@ -41,6 +45,7 @@ public class ContactsController {
 	}
 
 	@GetMapping
+	@Cacheable(cacheNames = "contacts", key = "'find:all'")
 	public List<Contact> findAll() {
 		return repository.findAll();
 	}
@@ -51,10 +56,10 @@ public class ContactsController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Contact> findById(@PathVariable long id) {
+	@Cacheable(cacheNames = "contacts", key = "'find:id:' + #id", unless = "#result == null")
+	public Contact findById(@PathVariable long id) {
 		return repository.findById(id)
-				.map(record -> ResponseEntity.ok().body(record))
-				.orElse(ResponseEntity.notFound().build());
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 	}
 
 	@GetMapping("/mongo/{id}")
@@ -65,6 +70,7 @@ public class ContactsController {
 	}
 
 	@PostMapping
+	@CacheEvict(cacheNames = "contacts", allEntries = true)
 	public Contact create(@RequestBody Contact entity) {
 		var saved = repository.save(entity);
 		mongoRepository.insert(ContactDto.create(saved));

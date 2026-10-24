@@ -5,11 +5,13 @@ import java.util.stream.LongStream;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 
 import com.leandro.contatos.entities.Contact;
 import com.leandro.contatos.repositories.mysql.ContactRepository;
 
+@EnableCaching
 @SpringBootApplication
 public class ContatosApplication {
 

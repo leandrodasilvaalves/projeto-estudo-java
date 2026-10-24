@@ -72,7 +72,7 @@ services:
 
   mongodb:
     image: mongo:8.0.3
-    container_name: mongodb
+    container_name: contatos.mongodb
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin123
@@ -87,7 +87,7 @@ services:
 
   mongo-express:
     image: mongo-express:1.0.2-20
-    container_name: mongo-express
+    container_name: contatos.mongo-express
     depends_on:
       mongodb:
         condition: service_healthy
@@ -97,3 +97,14 @@ services:
       ME_CONFIG_BASICAUTH_PASSWORD: admin123
     ports:
       - "8091:8081"
+
+  redis:
+    image: redis:alpine3.23
+    container_name: contatos.redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    environment:
+      - REDIS_REPLICATION_MODE=master
