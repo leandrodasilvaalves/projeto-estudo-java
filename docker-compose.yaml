@@ -6,7 +6,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: contatos  
     ports:
-      - "3306:3306"
+      - "3307:3306"
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root --password=root"]
       interval: 5s
@@ -67,7 +67,7 @@ services:
       - KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL=PLAINTEXT
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
     ports:
-      - 8080:8080
+      - 8081:8080
     
 
   mongodb:
@@ -102,7 +102,7 @@ services:
     image: redis:alpine3.23
     container_name: contatos.redis
     ports:
-      - "6379:6379"
+      - "6369:6379"
     volumes:
       - ./redis.conf:/usr/local/etc/redis/redis.conf
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
